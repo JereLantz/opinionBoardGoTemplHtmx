@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"opinionBoardGoTemplHtmx/templates"
 )
 
 func handleRoot(w http.ResponseWriter, r *http.Request){
@@ -12,7 +14,8 @@ func handleRoot(w http.ResponseWriter, r *http.Request){
 	}
 
 	w.WriteHeader(200)
-	w.Write([]byte("Hello world!"))
+	templates.HelloWorld().Render(context.Background(), w)
+	//w.Write([]byte("Hello world!"))
 }
 
 func main() {
