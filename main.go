@@ -1,10 +1,11 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"opinionBoardGoTemplHtmx/templates"
+
+	"github.com/a-h/templ"
 )
 
 func handleRoot(w http.ResponseWriter, r *http.Request){
@@ -12,10 +13,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(404)
 		return
 	}
-
-	w.WriteHeader(200)
-	templates.HelloWorld().Render(context.Background(), w)
-	//w.Write([]byte("Hello world!"))
+	templates.HelloWorld().Render(r.Context(),w)
 }
 
 func main() {
@@ -26,6 +24,8 @@ func main() {
 	}
 
 	handler.HandleFunc("GET /", handleRoot)
+
+	handler.Handle("GET /hello2", templ.Handler(templates.HelloWorld()))
 
 	log.Printf("http server started on port %s\n", server.Addr)
 	log.Fatal(server.ListenAndServe())
