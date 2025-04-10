@@ -29,7 +29,7 @@ func AddNewForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><label for=\"opinionTitle\">Opinion title:</label> <input id=\"opinionTitle\" name=\"opinionTitle\" placeholder=\"Title\"><br><label for=\"opinion\">Write your opinion:</label> <textarea name=\"opinion\" id=\"opinion\" cols=\"50\" rows=\"10\" placeholder=\"Opinion\"></textarea> <button type=\"submit\">Submit</button></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form><div><label for=\"opinionTitle\">Opinion title:</label> <input id=\"opinionTitle\" name=\"opinionTitle\" placeholder=\"Title\"></div><div><label for=\"opinion\">Write your opinion:</label><br><textarea name=\"opinion\" id=\"opinion\" cols=\"50\" rows=\"10\" placeholder=\"Write the opinion you want to share\"></textarea></div><button type=\"submit\">Submit</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

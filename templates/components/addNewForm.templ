@@ -2,11 +2,15 @@ package components
 
 templ AddNewForm(){
     <form>
-        <label for="opinionTitle">Opinion title:</label>
-        <input id="opinionTitle" name="opinionTitle" placeholder="Title"/>
-        <br/>
-        <label for="opinion">Write your opinion:</label>
-        <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Opinion"/>
+        <div>
+            <label for="opinionTitle">Opinion title:</label>
+            <input id="opinionTitle" name="opinionTitle" placeholder="Title"/>
+        </div>
+        <div>
+            <label for="opinion">Write your opinion:</label>
+            <br/>
+            <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share"/>
+        </div>
         <button type="submit">Submit</button>
     </form>
 }
