@@ -1,9 +1,11 @@
 package home
 
 import "opinionBoardGoTemplHtmx/templates/layouts"
+import "opinionBoardGoTemplHtmx/templates/components"
 
 templ Index(){
     @layouts.Base(){
-        <p>Hello from the homepage</p>
+        <p>Hello from the homepage!!!</p>
+        @components.AddNewForm()
     }
 }
