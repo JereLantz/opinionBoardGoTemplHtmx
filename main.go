@@ -46,7 +46,8 @@ func initializeDbScheme(db *sql.DB) error{
 
 func fetchAllSavedOpinions(db *sql.DB) ([]utils.Opinion, error){
 	var savedOpinions []utils.Opinion
-	fetchAllQuery := `SELECT * FROM opinions;`
+	fetchAllQuery := `SELECT * FROM opinions
+	ORDER BY id DESC;`
 
 	row, err := db.Query(fetchAllQuery)
 	if err != nil {
