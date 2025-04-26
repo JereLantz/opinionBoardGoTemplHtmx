@@ -1,16 +1,28 @@
 package components
 
-templ AddNewForm(){
-    <form>
-        <div>
-            <label for="opinionTitle">Opinion title:</label>
-            <input id="opinionTitle" name="opinionTitle" placeholder="Title"/>
-        </div>
-        <div>
-            <label for="opinion">Write your opinion:</label>
-            <br/>
-            <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share"/>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
+import "opinionBoardGoTemplHtmx/utils"
+
+
+templ AddNewForm(opinion utils.Opinion){
+    <div hx-ext="response-targets">
+        <form 
+        hx-post="/api/newopinion"
+        hx-target="closest div"
+        hx-target-error="#error-display"
+        hx-swap="outerHTML">
+            <div>
+                <label for="opinionTitle">Opinion title:</label>
+                <input value={opinion.Title} id="opinionTitle" name="opinionTitle" placeholder="Title" required/>
+            </div>
+            <div>
+                <label for="opinion">Write your opinion:</label>
+                <br/>
+                <textarea required name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share">
+                    {opinion.Opinion}
+                </textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="error-display"></div>
+    </div>
 }

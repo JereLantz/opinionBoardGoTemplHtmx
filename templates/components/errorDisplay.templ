@@ -1,0 +1,11 @@
+package components
+
+templ errorDisplay(errors []string){
+    <div>
+        <ul>
+            for _, error := range errors{
+                <li>{error}</li>
+            }
+        </ul>
+    </div>
+}

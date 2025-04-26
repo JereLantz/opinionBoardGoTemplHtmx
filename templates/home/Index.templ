@@ -2,10 +2,12 @@ package home
 
 import "opinionBoardGoTemplHtmx/templates/layouts"
 import "opinionBoardGoTemplHtmx/templates/components"
+import "opinionBoardGoTemplHtmx/utils"
 
+var emptyOpinion utils.Opinion
 templ Index(){
     @layouts.Base(){
-        <p>Hello from the homepage!!!</p>
-        @components.AddNewForm()
+        <h2>Add new opinion:</h2>
+        @components.AddNewForm(emptyOpinion)
     }
 }
