@@ -61,6 +61,7 @@ func handleNewOpinion(db *sql.DB, w http.ResponseWriter, r *http.Request){
 
 	if len(errors) > 0 {
 		w.WriteHeader(400)
+		components.ErrorDisplay(errors).Render(r.Context(),w)
 		return
 	}
 
