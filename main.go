@@ -11,13 +11,19 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func handleRoot(w http.ResponseWriter, r *http.Request){
+func handleRoot(db *sql.DB, w http.ResponseWriter, r *http.Request){
 	if r.URL.Path != "/"{
 		w.WriteHeader(404)
 		return
 	}
 
-	home.Index().Render(r.Context(), w)
+	savedOpinions, err := fetchAllSavedOpinions(db)
+	if err != nil {
+		w.WriteHeader(503)
+		return
+	}
+
+	home.Index(savedOpinions).Render(r.Context(), w)
 }
 
 func initializeDbScheme(db *sql.DB) error{
@@ -25,7 +31,8 @@ func initializeDbScheme(db *sql.DB) error{
 	CREATE TABLE IF NOT EXISTS opinions(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		title TEXT NOT NULL,
-		opinion TEXT NOT NULL
+		opinion TEXT NOT NULL,
+		score INTEGER NOT NULL
 	);
 	`
 
@@ -35,6 +42,29 @@ func initializeDbScheme(db *sql.DB) error{
 	}
 
 	return nil
+}
+
+func fetchAllSavedOpinions(db *sql.DB) ([]utils.Opinion, error){
+	var savedOpinions []utils.Opinion
+	fetchAllQuery := `SELECT * FROM opinions;`
+
+	row, err := db.Query(fetchAllQuery)
+	if err != nil {
+		return []utils.Opinion{}, err
+	}
+
+	for row.Next(){
+		var newOpinion utils.Opinion
+
+		err = row.Scan(&newOpinion.Id, &newOpinion.Title, &newOpinion.Opinion, &newOpinion.Score)
+		if err != nil {
+			return []utils.Opinion{}, err
+		}
+
+		savedOpinions = append(savedOpinions, newOpinion)
+	}
+
+	return savedOpinions, nil
 }
 
 func connectToDB() (*sql.DB, error){
@@ -76,8 +106,8 @@ func handleNewOpinion(db *sql.DB, w http.ResponseWriter, r *http.Request){
 }
 
 func addOpinionDb(db *sql.DB, newOpinion utils.Opinion) error{
-	addOpinionQuery := `INSERT INTO opinions (title, opinion)
-	values(?,?);`
+	addOpinionQuery := `INSERT INTO opinions (title, opinion, score)
+	values(?, ?, 0);`
 
 	_, err := db.Exec(addOpinionQuery, newOpinion.Title, newOpinion.Opinion)
 	if err != nil {
@@ -129,10 +159,12 @@ func main() {
 		log.Fatalf("could not initialize the database scheme %s\n",err)
 	}
 
-	handler.HandleFunc("GET /", handleRoot)
+	handler.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		handleRoot(db, w, r)
+	})
 
 	handler.HandleFunc("POST /api/newopinion", func(w http.ResponseWriter, r *http.Request) {
-		handleNewOpinion(db,w,r,)
+		handleNewOpinion(db,w,r)
 	})
 
 	log.Printf("http server started on port %s\n", server.Addr)

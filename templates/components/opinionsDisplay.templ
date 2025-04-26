@@ -1,0 +1,24 @@
+package components
+
+import "opinionBoardGoTemplHtmx/utils"
+
+templ OpinionsDisplay(opinions []utils.Opinion){
+    <div>
+        for _, opinion := range opinions {
+            <div>
+                <h3>{opinion.Title}</h3>
+                <p>{opinion.Opinion}</p>
+
+                <div>
+                    <p>TODO: score</p>
+                    <button>
+                        +
+                    </button>
+                    <button>
+                        -
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
