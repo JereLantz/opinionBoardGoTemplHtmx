@@ -11,11 +11,17 @@ templ Opinion(opin utils.Opinion){
         </div>
 
         <div>
-            <p>{strconv.Itoa(opin.Score)}</p>
-            <button>
+            <p id={"score-display_" + strconv.Itoa(opin.Id)}>{strconv.Itoa(opin.Score)}</p>
+            <button 
+            hx-put={"/api/scoreincrement/" + strconv.Itoa(opin.Id)}
+            hx-target={"#score-display_" + strconv.Itoa(opin.Id)}
+            hx-swap="innerhtml">
                 +
             </button>
-            <button>
+            <button 
+            hx-put={"/api/scoredecrement/" + strconv.Itoa(opin.Id)}
+            hx-target={"#score-display_" + strconv.Itoa(opin.Id)}
+            hx-swap="innerhtml">
                 -
             </button>
         </div>

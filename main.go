@@ -182,6 +182,14 @@ func main() {
 		handleNewOpinion(db,w,r)
 	})
 
+	handler.HandleFunc("PUT /api/scoreincrement/{id}", func(w http.ResponseWriter, r *http.Request) {
+		//TODO:
+	})
+
+	handler.HandleFunc("PUT /api/scoredecrement/{id}", func(w http.ResponseWriter, r *http.Request) {
+		//TODO:
+	})
+
 	handler.Handle("GET /index.js", http.FileServer(http.Dir("./")))
 
 	log.Printf("http server started on port %s\n", server.Addr)
