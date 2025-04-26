@@ -1,27 +1,29 @@
 package components
 
-//TODO: Lisää required attribute noihin inputteihin
-// joku hx-reswap="innerhtml" tohon error display?
-templ AddNewForm(){
-    <div>
-        <form 
-        id="newOpinionForm"
-        hx-post="/api/newopinion"
-        hx-target="#opinion-display"
-        hx-target-error="#error-display"
-        hx-swap="afterbegin">
-            <div>
-                <label for="opinionTitle">Opinion title:</label>
-                <input id="opinionTitle" name="opinionTitle" placeholder="Title"/>
-            </div>
-            <div>
-                <label for="opinion">Write your opinion:</label>
-                <br/>
-                <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share"/>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+import "opinionBoardGoTemplHtmx/utils"
 
-        <div id="error-display"></div>
-    </div>
+//TODO: Lisää required attribute noihin inputteihin
+templ AddNewForm(invalidInput utils.Opinion){
+    <form 
+    id="newOpinionForm"
+    hx-post="/api/newopinion"
+    hx-target="#opinion-display"
+    hx-target-error="#form-container"
+    hx-swap="afterbegin"
+    hx-on::after-request="resetNewOpinionForm()
+    clearErrors()
+    ">
+        <div>
+            <label for="opinionTitle">Opinion title:</label>
+            <input value={invalidInput.Title} id="opinionTitle" name="opinionTitle" placeholder="Title"/>
+        </div>
+        <div>
+            <label for="opinion">Write your opinion:</label>
+            <br/>
+            <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share">
+            {invalidInput.Opinion}
+            </textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
 }

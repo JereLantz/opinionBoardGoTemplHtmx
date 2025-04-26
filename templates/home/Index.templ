@@ -7,7 +7,9 @@ import "opinionBoardGoTemplHtmx/utils"
 templ Index(opinions []utils.Opinion){
     @layouts.Base(){
         <h2>Add new opinion:</h2>
-        @components.AddNewForm()
+        <div id="form-container">
+            @components.AddNewForm(utils.Opinion{})
+        </div>
         @components.OpinionsDisplay(opinions)
     }
 }

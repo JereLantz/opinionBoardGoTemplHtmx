@@ -83,22 +83,31 @@ func connectToDB() (*sql.DB, error){
 
 func handleNewOpinion(db *sql.DB, w http.ResponseWriter, r *http.Request){
 	errors,newOpinion, err := sanitizeInput(r)
+	invalidOpinion := utils.Opinion{
+		Title : r.FormValue("opinionTitle"),
+		Opinion: r.FormValue("opinion"),
+	}
+
 	if err != nil {
+		w.Header().Add("HX-Reswap", "innerhtml")
 		w.WriteHeader(400)
-		components.ErrorDisplay(errors).Render(r.Context(),w)
+		components.ErrorResponse(errors, invalidOpinion).Render(r.Context(),w)
 		return
 	}
 
 	if len(errors) > 0 {
-		w.Header().Add("HX-Reswap", "innerhtml")
+		w.Header().Add("HX-Reswap", "outerHTML")
 		w.WriteHeader(400)
-		components.ErrorDisplay(errors).Render(r.Context(),w)
+		components.ErrorResponse(errors,invalidOpinion).Render(r.Context(),w)
 		return
 	}
 
 	id, err := addOpinionDb(db, newOpinion)
 	if err != nil {
+		errors = append(errors, "Internal server error. Please try again later")
+		w.Header().Add("HX-Reswap", "outerhtml")
 		w.WriteHeader(500)
+		components.ErrorDisplay(errors).Render(r.Context(),w)
 		return
 	}
 
@@ -172,6 +181,8 @@ func main() {
 	handler.HandleFunc("POST /api/newopinion", func(w http.ResponseWriter, r *http.Request) {
 		handleNewOpinion(db,w,r)
 	})
+
+	handler.Handle("GET /index.js", http.FileServer(http.Dir("./")))
 
 	log.Printf("http server started on port %s\n", server.Addr)
 	log.Fatal(server.ListenAndServe())

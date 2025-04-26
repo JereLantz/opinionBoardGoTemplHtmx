@@ -8,9 +8,10 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "opinionBoardGoTemplHtmx/utils"
+
 // TODO: Lisää required attribute noihin inputteihin
-// joku hx-reswap="innerhtml" tohon error display?
-func AddNewForm() templ.Component {
+func AddNewForm(invalidInput utils.Opinion) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,7 +32,33 @@ func AddNewForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form id=\"newOpinionForm\" hx-post=\"/api/newopinion\" hx-target=\"#opinion-display\" hx-target-error=\"#error-display\" hx-swap=\"afterbegin\"><div><label for=\"opinionTitle\">Opinion title:</label> <input id=\"opinionTitle\" name=\"opinionTitle\" placeholder=\"Title\"></div><div><label for=\"opinion\">Write your opinion:</label><br><textarea name=\"opinion\" id=\"opinion\" cols=\"50\" rows=\"10\" placeholder=\"Write the opinion you want to share\"></textarea></div><button type=\"submit\">Submit</button></form><div id=\"error-display\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form id=\"newOpinionForm\" hx-post=\"/api/newopinion\" hx-target=\"#opinion-display\" hx-target-error=\"#form-container\" hx-swap=\"afterbegin\" hx-on::after-request=\"resetNewOpinionForm()\n    clearErrors()\n    \"><div><label for=\"opinionTitle\">Opinion title:</label> <input value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(invalidInput.Title)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/addNewForm.templ`, Line: 18, Col: 44}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" id=\"opinionTitle\" name=\"opinionTitle\" placeholder=\"Title\"></div><div><label for=\"opinion\">Write your opinion:</label><br><textarea name=\"opinion\" id=\"opinion\" cols=\"50\" rows=\"10\" placeholder=\"Write the opinion you want to share\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(invalidInput.Opinion)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/addNewForm.templ`, Line: 24, Col: 33}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</textarea></div><button type=\"submit\">Submit</button></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

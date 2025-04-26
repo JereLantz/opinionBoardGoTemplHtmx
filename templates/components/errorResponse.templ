@@ -1,0 +1,10 @@
+package components
+
+import "opinionBoardGoTemplHtmx/utils"
+
+templ ErrorResponse(errors []string, invalidData utils.Opinion){
+    <div id="form-container">
+        @AddNewForm(invalidData)
+        @ErrorDisplay(errors)
+    </div>
+}
