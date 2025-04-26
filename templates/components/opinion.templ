@@ -1,6 +1,7 @@
 package components
 
 import "opinionBoardGoTemplHtmx/utils"
+import "strconv"
 
 templ Opinion(opin utils.Opinion){
     <div>
@@ -10,7 +11,7 @@ templ Opinion(opin utils.Opinion){
         </div>
 
         <div>
-            <p>TODO: score</p>
+            <p>{strconv.Itoa(opin.Score)}</p>
             <button>
                 +
             </button>
