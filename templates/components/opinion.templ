@@ -1,0 +1,22 @@
+package components
+
+import "opinionBoardGoTemplHtmx/utils"
+
+templ Opinion(opin utils.Opinion){
+    <div>
+        <div>
+            <h3>{opin.Title}</h3>
+            <p>{opin.Opinion}</p>
+        </div>
+
+        <div>
+            <p>TODO: score</p>
+            <button>
+                +
+            </button>
+            <button>
+                -
+            </button>
+        </div>
+    </div>
+}

@@ -1,11 +1,9 @@
 package components
 
 templ ErrorDisplay(errors []string){
-    <div>
-        <ul>
-            for _, error := range errors{
-                <li>{error}</li>
-            }
-        </ul>
-    </div>
+    <ul>
+        for _, error := range errors{
+            <li>{error}</li>
+        }
+    </ul>
 }

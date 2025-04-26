@@ -82,39 +82,44 @@ func connectToDB() (*sql.DB, error){
 }
 
 func handleNewOpinion(db *sql.DB, w http.ResponseWriter, r *http.Request){
-	var reRenderEmptyOpinion utils.Opinion
-
 	errors,newOpinion, err := sanitizeInput(r)
 	if err != nil {
-		w.WriteHeader(400)
-		return
-	}
-
-	if len(errors) > 0 {
 		w.WriteHeader(400)
 		components.ErrorDisplay(errors).Render(r.Context(),w)
 		return
 	}
 
-	err = addOpinionDb(db, newOpinion)
+	if len(errors) > 0 {
+		w.Header().Add("HX-Reswap", "innerhtml")
+		w.WriteHeader(400)
+		components.ErrorDisplay(errors).Render(r.Context(),w)
+		return
+	}
+
+	id, err := addOpinionDb(db, newOpinion)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
 
+	newOpinion.Id = id
+
 	w.WriteHeader(200)
-	components.AddNewForm(reRenderEmptyOpinion).Render(r.Context(),w)
+	components.Opinion(newOpinion).Render(r.Context(),w)
 }
 
-func addOpinionDb(db *sql.DB, newOpinion utils.Opinion) error{
+func addOpinionDb(db *sql.DB, newOpinion utils.Opinion) (int, error){
 	addOpinionQuery := `INSERT INTO opinions (title, opinion, score)
 	values(?, ?, 0);`
 
-	_, err := db.Exec(addOpinionQuery, newOpinion.Title, newOpinion.Opinion)
+	result, err := db.Exec(addOpinionQuery, newOpinion.Title, newOpinion.Opinion)
 	if err != nil {
-		return err
+		return -1, err
 	}
-	return nil
+
+	id, err := result.LastInsertId()
+
+	return int(id), nil
 }
 
 func sanitizeInput(r *http.Request) ([]string, utils.Opinion, error){

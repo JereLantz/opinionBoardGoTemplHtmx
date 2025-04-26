@@ -1,28 +1,27 @@
 package components
 
-import "opinionBoardGoTemplHtmx/utils"
-
-
-templ AddNewForm(opinion utils.Opinion){
-    <div hx-ext="response-targets">
+//TODO: Lisää required attribute noihin inputteihin
+// joku hx-reswap="innerhtml" tohon error display?
+templ AddNewForm(){
+    <div>
         <form 
+        id="newOpinionForm"
         hx-post="/api/newopinion"
-        hx-target="closest div"
+        hx-target="#opinion-display"
         hx-target-error="#error-display"
-        hx-swap="outerHTML">
+        hx-swap="afterbegin">
             <div>
                 <label for="opinionTitle">Opinion title:</label>
-                <input value={opinion.Title} id="opinionTitle" name="opinionTitle" placeholder="Title" required/>
+                <input id="opinionTitle" name="opinionTitle" placeholder="Title"/>
             </div>
             <div>
                 <label for="opinion">Write your opinion:</label>
                 <br/>
-                <textarea required name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share">
-                    {opinion.Opinion}
-                </textarea>
+                <textarea name="opinion" id="opinion" cols="50" rows="10" placeholder="Write the opinion you want to share"/>
             </div>
             <button type="submit">Submit</button>
         </form>
+
         <div id="error-display"></div>
     </div>
 }
