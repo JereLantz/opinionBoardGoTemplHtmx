@@ -159,9 +159,9 @@ func sanitizeInput(r *http.Request) ([]string, utils.Opinion, error){
 }
 
 func handleScoreIncrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
+	incrementScoreQuery := `UPDATE opinions SET score = score + 1 WHERE id = ?;`
 	fetchScoreQuery := `SELECT score FROM opinions WHERE id = ?;`
-	incrementScoreQuery := `UPDATE opinions SET score = ? WHERE id = ?;`
-	var savedScore int
+	var incrementedScore int
 
 	idString := r.PathValue("id")
 	id, err := strconv.Atoi(idString)
@@ -171,32 +171,30 @@ func handleScoreIncrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+	_, err = db.Exec(incrementScoreQuery, id)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("error incrementing the score %s\n", err)
+		return
+	}
+
 	row := db.QueryRow(fetchScoreQuery, id)
 
-	err = row.Scan(&savedScore)
+	err = row.Scan(&incrementedScore)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Printf("error fetching the score form the database %s\n", err)
 		return
 	}
 
-	savedScore ++
-
-	_, err = db.Exec(incrementScoreQuery, savedScore, id)
-	if err != nil {
-		w.WriteHeader(500)
-		log.Printf("error writing the incremented score to the database %s\n", err)
-		return
-	}
-
 	w.WriteHeader(200)
-	w.Write([]byte(strconv.Itoa(savedScore)))
+	w.Write([]byte(strconv.Itoa(incrementedScore)))
 }
 
 func handleScoreDecrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
+	incrementScoreQuery := `UPDATE opinions SET score = score - 1 WHERE id = ?;`
 	fetchScoreQuery := `SELECT score FROM opinions WHERE id = ?;`
-	incrementScoreQuery := `UPDATE opinions SET score = ? WHERE id = ?;`
-	var savedScore int
+	var incrementedScore int
 
 	idString := r.PathValue("id")
 	id, err := strconv.Atoi(idString)
@@ -206,26 +204,24 @@ func handleScoreDecrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
 		return
 	}
 
+	_, err = db.Exec(incrementScoreQuery, id)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("error incrementing the score %s\n", err)
+		return
+	}
+
 	row := db.QueryRow(fetchScoreQuery, id)
 
-	err = row.Scan(&savedScore)
+	err = row.Scan(&incrementedScore)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Printf("error fetching the score form the database %s\n", err)
 		return
 	}
 
-	savedScore --
-
-	_, err = db.Exec(incrementScoreQuery, savedScore, id)
-	if err != nil {
-		w.WriteHeader(500)
-		log.Printf("error writing the incremented score to the database %s\n", err)
-		return
-	}
-
 	w.WriteHeader(200)
-	w.Write([]byte(strconv.Itoa(savedScore)))
+	w.Write([]byte(strconv.Itoa(incrementedScore)))
 }
 
 func main() {
