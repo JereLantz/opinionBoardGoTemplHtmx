@@ -4,21 +4,21 @@ import "opinionBoardGoTemplHtmx/utils"
 import "strconv"
 
 templ Opinion(opin utils.Opinion){
-    <div>
-        <div>
-            <h3>{opin.Title}</h3>
-            <p>{opin.Opinion}</p>
+    <div class="opinion-container">
+        <div class="opinion-display">
+            <h3 class="opinion-title">{opin.Title}</h3>
+            <p class="opinion-text">{opin.Opinion}</p>
         </div>
 
-        <div>
-            <p id={"score-display_" + strconv.Itoa(opin.Id)}>{strconv.Itoa(opin.Score)}</p>
-            <button 
+        <div class="score-display">
+            <span class="score" id={"score-display_" + strconv.Itoa(opin.Id)}>{strconv.Itoa(opin.Score)}</span>
+            <button class="score-button increment-button"
             hx-put={"/api/scoreincrement/" + strconv.Itoa(opin.Id)}
             hx-target={"#score-display_" + strconv.Itoa(opin.Id)}
             hx-swap="innerhtml">
                 +
             </button>
-            <button 
+            <button class="score-button decrement-button"
             hx-put={"/api/scoredecrement/" + strconv.Itoa(opin.Id)}
             hx-target={"#score-display_" + strconv.Itoa(opin.Id)}
             hx-swap="innerhtml">

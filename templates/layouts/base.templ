@@ -12,10 +12,13 @@ templ Base(){
             <script src="https://unpkg.com/htmx.org@2.0.4"></script>
             <script src="https://unpkg.com/htmx-ext-response-targets@2.0.2"></script>
             <script src="index.js"></script>
+            <link rel="stylesheet" href="/styles/index.css">
         </head>
         <body hx-ext="response-targets">
             @components.Header()
-            { children... }
+            <main class="main-content">
+                { children... }
+            </main>
         </body>
     </html>
 }

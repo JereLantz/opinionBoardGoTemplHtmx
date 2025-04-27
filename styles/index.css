@@ -1,0 +1,35 @@
+.main-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.opinion-container{
+    border: solid 1px;
+    padding-bottom: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    margin: 1rem;
+    text-align: left;
+}
+
+.score{
+    margin-right: 0.5rem;
+    font-weight: 700;
+}
+
+.score-button{
+    width: 30px;
+    font-size: 1.250em;
+}
+
+.opinion-title {
+    text-decoration-line: underline;
+}
+
+.error-display {
+    display: inline-block;
+    text-align: left;
+    color: red;
+}
