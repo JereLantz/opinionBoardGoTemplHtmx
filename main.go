@@ -7,6 +7,7 @@ import (
 	"opinionBoardGoTemplHtmx/templates/components"
 	"opinionBoardGoTemplHtmx/templates/home"
 	"opinionBoardGoTemplHtmx/utils"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -157,6 +158,46 @@ func sanitizeInput(r *http.Request) ([]string, utils.Opinion, error){
 	return errors, newOpinion, nil
 }
 
+func handleScoreIncrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
+	//TODO:
+	fetchScoreQuery := `SELECT score FROM opinions WHERE id = ?;`
+	incrementScoreQuery := `UPDATE opinions SET score = ? WHERE id = ?;`
+
+	idString := r.PathValue("id")
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		log.Printf("error converting id to integer %s\n", err)
+		w.WriteHeader(500)
+		return
+	}
+
+	row := db.QueryRow(fetchScoreQuery, id)
+
+	var savedScore int
+	err = row.Scan(&savedScore)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("error fetching the score form the database %s\n", err)
+		return
+	}
+
+	savedScore ++
+
+	_, err = db.Exec(incrementScoreQuery, savedScore, id)
+	if err != nil {
+		w.WriteHeader(500)
+		log.Printf("error writing the incremented score to the database %s\n", err)
+		return
+	}
+
+	w.WriteHeader(200)
+	w.Write([]byte(strconv.Itoa(savedScore)))
+}
+
+func handleScoreDecrement(db *sql.DB, w http.ResponseWriter, r *http.Request){
+	//TODO:
+}
+
 func main() {
 	handler := http.NewServeMux();
 	server := http.Server{
@@ -183,11 +224,11 @@ func main() {
 	})
 
 	handler.HandleFunc("PUT /api/scoreincrement/{id}", func(w http.ResponseWriter, r *http.Request) {
-		//TODO:
+		handleScoreIncrement(db, w, r)
 	})
 
 	handler.HandleFunc("PUT /api/scoredecrement/{id}", func(w http.ResponseWriter, r *http.Request) {
-		//TODO:
+		handleScoreDecrement(db, w, r)
 	})
 
 	handler.Handle("GET /index.js", http.FileServer(http.Dir("./")))
